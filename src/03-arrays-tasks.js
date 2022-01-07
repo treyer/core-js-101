@@ -196,9 +196,8 @@ function getTail(arr, n) {
  */
 function toCsvText(arr) {
   return arr.reduce(
-    (str, el, index, array) =>
-      `${str}${el.toString()}${index !== array.length - 1 ? '\n' : ''}`,
-    ''
+    (str, el, index, array) => `${str}${el.toString()}${index !== array.length - 1 ? '\n' : ''}`,
+    '',
   );
 }
 
@@ -334,7 +333,7 @@ function sortDigitNamesByNumericOrder(arr) {
     'nine',
   ];
   return arr.sort(
-    (a, b) => numbersInString.indexOf(a) - numbersInString.indexOf(b)
+    (a, b) => numbersInString.indexOf(a) - numbersInString.indexOf(b),
   );
 }
 
@@ -459,9 +458,7 @@ function sortCitiesArray(arr) {
 function getIdentityMatrix(n) {
   return new Array(n)
     .fill([])
-    .map((el, index) =>
-      new Array(n).fill(0).map((el1, index1) => (index1 === index ? 1 : 0))
-    );
+    .map((el, index) => new Array(n).fill(0).map((el1, index1) => (index1 === index ? 1 : 0)));
 }
 
 /**
