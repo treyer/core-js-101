@@ -272,8 +272,24 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const summary = ccn
+    .toString()
+    .split('')
+    .reduce((sum, el, index, array) => {
+      if (array.length % 2 === 0) {
+        if (index % 2 === 0) {
+          return sum + (+el * 2 > 9 ? +el * 2 - 9 : +el * 2);
+        }
+        return sum + +el;
+      }
+      if (index % 2 !== 0) {
+        return sum + (+el * 2 > 9 ? +el * 2 - 9 : +el * 2);
+      }
+      return sum + +el;
+    }, 0);
+
+  return summary % 10 === 0;
 }
 
 /**
@@ -320,8 +336,32 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const closeBraces = [']', '}', ')', '>'];
+  const openBraces = ['[', '{', '(', '<'];
+
+  const pairs = {
+    ']': '[',
+    '}': '{',
+    ')': '(',
+    '>': '<',
+  };
+
+  let result = true;
+
+  const arr = [];
+  str.split('').forEach((el) => {
+    if (closeBraces.includes(el) && arr.length === 0) {
+      result = false;
+    }
+    if (pairs[el] && pairs[el] === arr[arr.length - 1]) {
+      arr.pop();
+    }
+    if (openBraces.includes(el)) { arr.push(el); }
+  });
+  if (arr.length > 0) result = false;
+
+  return result;
 }
 
 /**
@@ -344,8 +384,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return Number(num).toString(n);
 }
 
 /**
@@ -360,8 +400,40 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const pathesArrays = pathes.map((path) => {
+    const fragments = [];
+    path.split('').forEach((char) => {
+      if (char === '/') {
+        fragments.push('/');
+      } else if (fragments.length === 0) {
+        fragments.push(char);
+      } else if (fragments[fragments.length - 1] === '/') {
+        fragments.push(char);
+      } else {
+        fragments[fragments.length - 1] += char;
+      }
+    });
+    return fragments;
+  });
+
+  const minlength = pathesArrays.reduce((min, el) => (el.length < min ? el.length : min), 999);
+
+  const result = [];
+  for (let i = 0; i < minlength; i += 1) {
+    const el = pathesArrays[0][i];
+    let isCommon = true;
+    pathesArrays.forEach((path) => {
+      if (path[i] !== el) isCommon = false;
+    });
+    if (isCommon) {
+      result.push(el);
+    } else {
+      break;
+    }
+  }
+
+  return result.join('');
 }
 
 /**
@@ -382,8 +454,19 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+  for (let i = 0; i < m1.length; i += 1) {
+    result[i] = [];
+    for (let j = 0; j < m2[0].length; j += 1) {
+      let sum = 0;
+      for (let m = 0; m < m1[0].length; m += 1) {
+        sum += m1[i][m] * m2[m][j];
+      }
+      result[i][j] = sum;
+    }
+  }
+  return result;
 }
 
 /**
@@ -416,8 +499,30 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const winPositions = [
+    [[0, 0], [0, 1], [0, 2]],
+    [[1, 0], [1, 1], [1, 2]],
+    [[2, 0], [2, 1], [2, 2]],
+    [[0, 0], [1, 0], [2, 0]],
+    [[0, 1], [1, 1], [2, 1]],
+    [[0, 2], [1, 2], [2, 2]],
+    [[0, 0], [1, 1], [2, 2]],
+    [[0, 2], [1, 1], [2, 0]],
+  ];
+
+  let isWinner;
+  winPositions.forEach((winPosition) => {
+    let countX = 0;
+    let count0 = 0;
+    winPosition.forEach((point) => {
+      if (position[point[0]][point[1]] === 'X') countX += 1;
+      if (position[point[0]][point[1]] === '0') count0 += 1;
+    });
+    if (countX === 3) isWinner = 'X';
+    if (count0 === 3) isWinner = '0';
+  });
+  return isWinner;
 }
 
 module.exports = {
